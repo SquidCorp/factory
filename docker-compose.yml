@@ -1,0 +1,34 @@
+name: orca
+
+services:
+  orca-server:
+    build:
+      context: .
+      args:
+        ORCA_VERSION: ${ORCA_VERSION:-v1.4.244}
+        PI_PROFILE_SOURCE: git:https://github.com/SquidCorp/pi-profile
+    image: orca-server:local
+    container_name: orca-server
+    restart: unless-stopped
+    init: true
+    shm_size: "1gb"
+    environment:
+      ORCA_PORT: "6768"
+      ORCA_PAIRING_ADDRESS: ${ORCA_PAIRING_ADDRESS:-127.0.0.1}
+      ORCA_SERVE_ARGS: ${ORCA_SERVE_ARGS:-}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+    ports:
+      - "6768:6768"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - orca-home:/home/orca
+    healthcheck:
+      test: ["CMD", "bash", "-c", ": >/dev/tcp/127.0.0.1/6768"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+
+volumes:
+  orca-home:
