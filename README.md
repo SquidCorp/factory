@@ -48,6 +48,21 @@ docker compose exec -it orca-server bash
 
 Install other agents from an Orca terminal on this server (they persist under `/home/orca/.local`).
 
+## Git / private GitHub repos
+
+`git` is on `PATH`. Clone into `~/Development` (persists on the `orca-home` volume):
+
+```bash
+cd ~/Development
+git clone https://github.com/SquidCorp/some-private-repo.git
+```
+
+Set `GITHUB_TOKEN` in `.env` (local) or Coolify **Environment Variables** (VPS). Use a classic PAT or fine-grained token with `contents:read` (and `contents:write` if you push). SSH `git@github.com:...` URLs are rewritten to HTTPS so the same token works.
+
+```bash
+docker compose exec orca-server git -C /home/orca/Development ls
+```
+
 ## Upgrade
 
 Bump `ORCA_VERSION` in `.env` and run `docker compose build --no-cache && docker compose up -d`.

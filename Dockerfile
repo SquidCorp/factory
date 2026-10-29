@@ -49,7 +49,8 @@ RUN useradd --create-home --shell /bin/bash orca \
     && chown -R orca:orca /home/orca
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY git-credential-github-token /usr/local/bin/git-credential-github-token
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh /usr/local/bin/git-credential-github-token
 
 USER orca
 WORKDIR /home/orca

@@ -17,6 +17,7 @@ services:
       ORCA_PAIRING_ADDRESS: ${ORCA_PAIRING_ADDRESS:-127.0.0.1}
       ORCA_SERVE_ARGS: ${ORCA_SERVE_ARGS:-}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     ports:
       - "6768:6768"
     extra_hosts:

@@ -39,8 +39,19 @@ fs.writeFileSync(file, JSON.stringify(auth, null, 2) + "\n", { mode: 0o600 });
 NODE
 }
 
+configure_git() {
+  mkdir -p /home/orca/Development
+  git config --global init.defaultBranch main
+  git config --global --unset-all url.https://github.com/.insteadof >/dev/null 2>&1 || true
+  git config --global url."https://github.com/".insteadOf "git@github.com:"
+  git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+  git config --global credential.https://github.com.helper /usr/local/bin/git-credential-github-token
+  export GIT_TERMINAL_PROMPT=0
+}
+
 seed_pi
 write_openrouter_auth
+configure_git
 
 if [[ "${1:-}" != "serve" && "${1:-}" != "" ]]; then
   exec "$@"
