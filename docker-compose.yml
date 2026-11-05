@@ -5,8 +5,8 @@ services:
     build:
       context: .
       args:
-        ORCA_VERSION: ${ORCA_VERSION:-v1.4.244}
-        PI_PROFILE_SOURCE: git:https://github.com/SquidCorp/pi-profile
+        ORCA_VERSION: ${ORCA_VERSION:-v1.4.248}
+        PI_PROFILE_SOURCE: git:https://github.com/SquidCorp/pi-squidcorp
     image: orca-server:local
     container_name: orca-server
     restart: unless-stopped
