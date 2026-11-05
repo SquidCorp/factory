@@ -2,10 +2,11 @@
 # See https://github.com/stablyai/orca and docs/reference/headless-linux-server.md
 FROM ubuntu:24.04
 
-ARG ORCA_VERSION=v1.4.244
+ARG ORCA_VERSION=v1.4.248
 ARG NODE_VERSION=24.22.2
+ARG GH_VERSION=2.83.1
 ARG TARGETARCH
-ARG PI_PROFILE_SOURCE=git:https://github.com/SquidCorp/pi-profile
+ARG PI_PROFILE_SOURCE=git:https://github.com/SquidCorp/pi-squidcorp
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LIBGL_ALWAYS_SOFTWARE=1 \
@@ -31,6 +32,15 @@ RUN case "${TARGETARCH}" in \
     && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${nodearch}.tar.xz" \
          | tar -xJ -C /usr/local --strip-components=1 \
     && node -v && npm -v
+
+# GitHub CLI (https://cli.github.com)
+RUN case "${TARGETARCH}" in \
+      amd64|arm64) gharch="${TARGETARCH}" ;; \
+      *) echo "unsupported TARGETARCH=${TARGETARCH}" >&2; exit 1 ;; \
+    esac \
+    && curl -fsSL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_${gharch}.tar.gz" \
+         | tar -xz -C /usr/local --strip-components=1 \
+    && gh --version
 
 RUN if [ "${TARGETARCH}" = arm64 ]; then asset=orca-linux-arm64.AppImage; else asset=orca-linux.AppImage; fi \
     && curl -fL --retry 3 -o /tmp/orca.AppImage \
